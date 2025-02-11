@@ -12,7 +12,7 @@
                     {% if product.price > 100 %} style="color: red;" {% endif %}>
                     {{ product.name }}
                 </h5>
-                <p class="card-text"><strong>Price: </strong> ${{ product.price }}</p> <!-- Aquí mostramos el precio -->
+                <p class="card-text"><strong>Price: </strong> ${{ product.price }}</p>
                 <a href="{% url 'show' product.id %}" class="btn bg-primary text-white">
                     View Details
                 </a>

@@ -74,7 +74,7 @@ class ProductForm(forms.Form):
     def clean_price(self):
         price = self.cleaned_data.get("price")
         if price <= 0:
-            raise forms.ValidationError("Price must be greater than zero.")  # ✅ Custom validation
+            raise forms.ValidationError("Price must be greater than zero.") 
         return price
 
 class ProductCreateView(View):
@@ -92,13 +92,13 @@ class ProductCreateView(View):
         form = ProductForm(request.POST)
         if form.is_valid():
             new_product = {
-                "id": str(len(Product.products) + 1),  # Auto-increment ID
+                "id": str(len(Product.products) + 1), 
                 "name": form.cleaned_data["name"],
                 "description": "New Product",
                 "price": form.cleaned_data["price"]
             }
             Product.products.append(new_product)
-            messages.success(request, "Product created!")  # ✅ Display success message
+            messages.success(request, "Product created!") 
 
             return redirect('success')
         else:
