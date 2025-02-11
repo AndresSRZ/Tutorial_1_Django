@@ -8,8 +8,11 @@
         <div class="card">
             <img src="https://static.djangoproject.com/img/logos/django-logo-positive.svg" class="card-img-top img-card">
             <div class="card-body text-center">
-                <h5 class="card-title">{{ product.name }}</h5>
-                <p class="card-text"><strong>Price: ${{ product.price }}</strong></p> <!-- Aquí mostramos el precio -->
+                <h5 class="card-title"
+                    {% if product.price > 100 %} style="color: red;" {% endif %}>
+                    {{ product.name }}
+                </h5>
+                <p class="card-text"><strong>Price: </strong> ${{ product.price }}</p> <!-- Aquí mostramos el precio -->
                 <a href="{% url 'show' product.id %}" class="btn bg-primary text-white">
                     View Details
                 </a>

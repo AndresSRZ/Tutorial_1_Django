@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import TemplateView
 from django.views import View
 
@@ -41,6 +41,12 @@ class ProductIndexView(View):
 class ProductShowView(View):
     template_name = 'products/show.html'
     def get(self, request, id):
+
+        product = next((p for p in Product.products if p["id"] == id), None)
+
+        if product is None:
+            return HttpResponseRedirect("/")
+
         viewData = {}
         product = Product.products[int(id)-1]
         viewData["title"] = product["name"] + " - Online Store"
