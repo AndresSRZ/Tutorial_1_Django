@@ -1,7 +1,9 @@
-from django.shortcuts import render
+from django import forms
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import TemplateView
 from django.views import View
+from django.contrib import messages
 
 # Create your views here. 
 class HomePageView(TemplateView):
@@ -64,3 +66,46 @@ class ContactPageView(TemplateView):
             "subtitle": "Contact Information",
         })
         return context
+
+class ProductForm(forms.Form):
+    name = forms.CharField(required=True)
+    price = forms.IntegerField(required=True)
+
+    def clean_price(self):
+        price = self.cleaned_data.get("price")
+        if price <= 0:
+            raise forms.ValidationError("Price must be greater than zero.")  # ✅ Custom validation
+        return price
+
+class ProductCreateView(View):
+    template_name = 'products/create.html'
+    
+    def get(self, request):
+        form = ProductForm()
+        viewData = {}
+        viewData["title"] = "Create product"
+        viewData["form"] = form
+        
+        return render(request, self.template_name, viewData)
+    
+    def post(self, request):
+        form = ProductForm(request.POST)
+        if form.is_valid():
+            new_product = {
+                "id": str(len(Product.products) + 1),  # Auto-increment ID
+                "name": form.cleaned_data["name"],
+                "description": "New Product",
+                "price": form.cleaned_data["price"]
+            }
+            Product.products.append(new_product)
+            messages.success(request, "Product created!")  # ✅ Display success message
+
+            return redirect('success')
+        else:
+            viewData = {}
+            viewData["title"] = "Create product"
+            viewData["form"] = form
+            return render(request, self.template_name, viewData)
+        
+class ProductSuccessView(TemplateView):
+    template_name = "products/success.html"
